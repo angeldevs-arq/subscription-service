@@ -1,0 +1,51 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: subscription-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/subscription_db?createDatabaseIfNotExist=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: com.angeldevs.subscriptionservice.shared.infrastructure.persistence.jpa.strategy.SnakeCasePhysicalNamingStrategy
+    open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        
+  # Spring Boot Admin Client Configuration
+  boot:
+    admin:
+      client:
+        url: http://localhost:9090
+
+documentation:
+  application:
+    description: "@project.description@"
+    version: "@project.version@"
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

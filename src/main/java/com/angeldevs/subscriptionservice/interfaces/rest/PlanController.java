@@ -1,5 +1,17 @@
 package com.angeldevs.subscriptionservice.interfaces.rest;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.angeldevs.subscriptionservice.domain.model.queries.GetAllPlansQuery;
 import com.angeldevs.subscriptionservice.domain.model.queries.GetPlanByIdQuery;
 import com.angeldevs.subscriptionservice.domain.services.PlanCommandService;
@@ -8,13 +20,8 @@ import com.angeldevs.subscriptionservice.interfaces.rest.resources.plan.CreatePl
 import com.angeldevs.subscriptionservice.interfaces.rest.resources.plan.PlanResource;
 import com.angeldevs.subscriptionservice.interfaces.rest.transformers.plan.CreatePlanCommandFromResourceAssembler;
 import com.angeldevs.subscriptionservice.interfaces.rest.transformers.plan.PlanResourceFromEntityAssembler;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping(value = "/api/v1/plans", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,5 +70,4 @@ public class PlanController {
 
         return ResponseEntity.ok(planResource);
     }
-
 }

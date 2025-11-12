@@ -1,5 +1,15 @@
 package com.angeldevs.subscriptionservice.interfaces.rest;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.angeldevs.subscriptionservice.domain.model.queries.GetPaymentMethodsByIdQuery;
 import com.angeldevs.subscriptionservice.domain.model.queries.GetPlanByIdQuery;
 import com.angeldevs.subscriptionservice.domain.model.queries.GetSubscriptionByOrganizerIdQuery;
@@ -14,11 +24,8 @@ import com.angeldevs.subscriptionservice.interfaces.rest.transformers.paymentmet
 import com.angeldevs.subscriptionservice.interfaces.rest.transformers.plan.PlanResourceFromEntityAssembler;
 import com.angeldevs.subscriptionservice.interfaces.rest.transformers.subscription.CreateSubscriptionCommandFromResourceAssembler;
 import com.angeldevs.subscriptionservice.interfaces.rest.transformers.subscription.SubscriptionResourceFromEntityAssembler;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/v1/subscription", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,7 +38,9 @@ public class SubscriptionController {
     private final PlanQueryService planQueryService;
     private final PaymentMethodQueryService paymentMethodQueryService;
 
-    public SubscriptionController(SubscriptionCommandService subscriptionCommandService, SubscriptionQueryService subscriptionQueryService, PlanQueryService planQueryService, PaymentMethodQueryService paymentMethodQueryService) {
+    public SubscriptionController(SubscriptionCommandService subscriptionCommandService,
+            SubscriptionQueryService subscriptionQueryService, PlanQueryService planQueryService,
+            PaymentMethodQueryService paymentMethodQueryService) {
         this.subscriptionCommandService = subscriptionCommandService;
         this.subscriptionQueryService = subscriptionQueryService;
         this.planQueryService = planQueryService;
@@ -53,7 +62,8 @@ public class SubscriptionController {
     }
 
     @GetMapping("/organizer-id/{organizerId}")
-    public ResponseEntity<GetSubscriptionByOrganizerResource> getSubscriptionByOrganizerId(@PathVariable Long organizerId) {
+    public ResponseEntity<GetSubscriptionByOrganizerResource> getSubscriptionByOrganizerId(
+            @PathVariable Long organizerId) {
         var query = new GetSubscriptionByOrganizerIdQuery(organizerId);
         var subscription = subscriptionQueryService.handle(query);
 
@@ -61,7 +71,8 @@ public class SubscriptionController {
             return ResponseEntity.badRequest().build();
 
         var plan = planQueryService.handle(new GetPlanByIdQuery(subscription.getPlan().getId()));
-        var paymentMethod = paymentMethodQueryService.handle(new GetPaymentMethodsByIdQuery(subscription.getPaymentMethod().getId()));
+        var paymentMethod = paymentMethodQueryService
+                .handle(new GetPaymentMethodsByIdQuery(subscription.getPaymentMethod().getId()));
 
         var subscriptionResource = SubscriptionResourceFromEntityAssembler.toResourceFromEntity(subscription);
         var planResource = PlanResourceFromEntityAssembler.toResourceFromEntity(plan);
@@ -73,8 +84,6 @@ public class SubscriptionController {
                 subscriptionResource.endDate(),
                 subscriptionResource.organizerId(),
                 planResource,
-                paymentMethodResource
-        ));
+                paymentMethodResource));
     }
-
 }
