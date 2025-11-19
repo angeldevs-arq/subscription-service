@@ -45,6 +45,7 @@ eureka:
   instance:
     hostname: ${EUREKA_HOST:localhost}    
     non-secure-port-enabled: true
+    secure-port-enabled: true
 
 management:
   endpoints:
